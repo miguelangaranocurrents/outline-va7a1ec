@@ -22,15 +22,22 @@ function isListItem(token: Token): boolean {
   return !!token && token.type === "list_item_open";
 }
 
+// Lists already converted by an earlier checklist item are still list
+// boundaries, so they must be matched here or the search for this item's list
+// runs past them and converts a neighbouring plain list.
 function isListOpen(token: Token): boolean {
   return (
-    token.type === "bullet_list_open" || token.type === "ordered_list_open"
+    token.type === "bullet_list_open" ||
+    token.type === "ordered_list_open" ||
+    token.type === "checkbox_list_open"
   );
 }
 
 function isListClose(token: Token): boolean {
   return (
-    token.type === "bullet_list_close" || token.type === "ordered_list_close"
+    token.type === "bullet_list_close" ||
+    token.type === "ordered_list_close" ||
+    token.type === "checkbox_list_close"
   );
 }
 

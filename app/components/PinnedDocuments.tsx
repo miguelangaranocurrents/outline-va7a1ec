@@ -3,7 +3,8 @@ import {
   DndContext,
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -80,7 +81,16 @@ function PinnedDocuments({
   }, [pins]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    // A mouse drag starts only once the pointer has actually moved, so holding
+    // the button down on a card still behaves as a click.
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    // Touch requires a short press so that scrolling the page isn't mistaken
+    // for a drag.
+    useSensor(TouchSensor, {
       activationConstraint: {
         delay: 100,
         tolerance: 5,
